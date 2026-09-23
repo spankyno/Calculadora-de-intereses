@@ -1,24 +1,29 @@
+import Link from "next/link";
 import { PiggyBank } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export function SiteHeader() {
   return (
-    <header className="print:hidden">
-      <div className="container flex items-center justify-between py-6">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-premium">
-            <PiggyBank className="h-4.5 w-4.5" />
+    <header className="border-b border-border/70 print:hidden">
+      <div className="container flex h-14 items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <PiggyBank className="h-3.5 w-3.5" />
           </div>
-          <div>
-            <p className="font-display text-[17px] font-medium leading-none">
-              Calculadora de Intereses
-            </p>
-            <p className="mt-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-              Interés simple · España
-            </p>
-          </div>
-        </div>
-        <ThemeToggle />
+          <span className="font-display text-[15px] font-medium leading-none">
+            Calculadora de Intereses
+          </span>
+        </Link>
+
+        <nav className="flex items-center gap-4">
+          <Link
+            href="/acerca-de"
+            className="text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Acerca de
+          </Link>
+          <ThemeToggle />
+        </nav>
       </div>
     </header>
   );

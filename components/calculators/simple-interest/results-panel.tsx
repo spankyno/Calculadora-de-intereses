@@ -2,6 +2,7 @@
 
 import { TrendingUp, Receipt, Wallet, Landmark } from "lucide-react";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
+import { ResultsBreakdownChart } from "./results-breakdown-chart";
 import type { SimpleInterestResult } from "@/lib/calculators/simple-interest";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 import { cn } from "@/lib/utils";
@@ -73,6 +74,9 @@ export function ResultsPanel({ result, principal }: ResultsPanelProps) {
           tooltip="Lo que realmente ganas después de la retención: Intereses brutos − Retención."
         />
       </div>
+
+      {/* Gráfico de desglose: brutos, retención, netos y capital final */}
+      <ResultsBreakdownChart result={result} principal={principal} />
 
       {/* TIN equivalentes */}
       <div>

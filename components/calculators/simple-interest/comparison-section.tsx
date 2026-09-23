@@ -5,6 +5,7 @@ import { LayoutGrid, Table2, Copy, Printer, Check, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ComparisonTable } from "./comparison-table";
 import { ComparisonCards } from "./comparison-cards";
+import { ComparisonChart } from "./comparison-chart";
 import {
   calculateSimpleInterest,
   DURATION_UNIT_LABELS,
@@ -74,6 +75,8 @@ export function ComparisonSection({
 
   return (
     <div className="space-y-4" id="comparativa-imprimible">
+      <ComparisonChart scenarios={scenarios} />
+
       <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <div className="inline-flex rounded-xl border border-border bg-muted/40 p-1">
           <ToggleButton

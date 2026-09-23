@@ -140,33 +140,6 @@ export default function Home() {
             onRename={handleRenameScenario}
           />
         </section>
-
-        {/* Roadmap de próximas calculadoras */}
-        <section className="mt-16 sm:mt-24">
-          <div className="rounded-2xl border border-dashed border-border p-6 sm:p-8">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Próximamente
-            </p>
-            <h3 className="mt-1.5 font-display text-xl font-medium">
-              Más herramientas financieras en camino
-            </h3>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {[
-                "Interés compuesto",
-                "Préstamos",
-                "Hipotecas",
-                "Planes de pensiones",
-              ].map((tool) => (
-                <span
-                  key={tool}
-                  className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground"
-                >
-                  {tool}
-                </span>
-              ))}
-            </div>
-          </div>
-        </section>
       </main>
 
       <SiteFooter />
