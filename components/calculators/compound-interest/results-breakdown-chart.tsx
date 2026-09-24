@@ -2,11 +2,11 @@
 
 import { BarChart3 } from "lucide-react";
 import { StackedBar } from "@/components/ui/stacked-bar";
-import type { SimpleInterestResult } from "@/lib/calculators/simple-interest";
+import type { CompoundInterestResult } from "@/lib/calculators/compound-interest";
 import { formatCurrency } from "@/lib/utils";
 
 interface ResultsBreakdownChartProps {
-  result: SimpleInterestResult;
+  result: CompoundInterestResult;
   principal: number;
 }
 

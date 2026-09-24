@@ -2,19 +2,19 @@
 
 import { Crown } from "lucide-react";
 import {
-  calculateSimpleInterest,
-  type SimpleInterestScenario,
-} from "@/lib/calculators/simple-interest";
+  calculateCompoundInterest,
+  type CompoundInterestScenario,
+} from "@/lib/calculators/compound-interest";
 import { cn, formatCurrency } from "@/lib/utils";
 
 interface ComparisonChartProps {
-  scenarios: SimpleInterestScenario[];
+  scenarios: CompoundInterestScenario[];
 }
 
 export function ComparisonChart({ scenarios }: ComparisonChartProps) {
   const rows = scenarios.map((s) => ({
     scenario: s,
-    result: calculateSimpleInterest(s.input),
+    result: calculateCompoundInterest(s.input),
   }));
 
   const maxValue = Math.max(

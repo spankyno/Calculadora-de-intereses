@@ -46,8 +46,8 @@ const HOW_IT_WORKS = [
 ];
 
 const MODULES = [
-  { name: "Interés simple", status: "Disponible" as const },
-  { name: "Interés compuesto", status: "Próximamente" as const },
+  { name: "Depósitos (interés simple)", status: "Disponible" as const },
+  { name: "Interés compuesto", status: "Disponible" as const },
   { name: "Préstamos", status: "Próximamente" as const },
   { name: "Hipotecas", status: "Próximamente" as const },
   { name: "Planes de pensiones", status: "Próximamente" as const },

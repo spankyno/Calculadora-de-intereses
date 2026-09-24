@@ -28,7 +28,16 @@ Interés neto      = Interés bruto − Retención
 Capital final     = Capital + Interés (bruto o neto)
 ```
 
-La lógica de cálculo es pura, tipada y está aislada de la UI en [`lib/calculators/simple-interest.ts`](./lib/calculators/simple-interest.ts), lo que la hace fácil de testear y reutilizar.
+La lógica de cálculo es pura, tipada y está aislada de la UI en [`lib/calculators/simple-interest.ts`](./lib/calculators/simple-interest.ts) y [`lib/calculators/compound-interest.ts`](./lib/calculators/compound-interest.ts), lo que la hace fácil de testear y reutilizar.
+
+### Interés compuesto
+
+```
+Capital final bruto = Capital × (1 + TIN / (100 × n)) ^ (n × tiempo en años)
+TAE (Tasa Anual Equivalente) = (1 + TIN / (100 × n)) ^ n − 1
+```
+
+donde `n` es el número de capitalizaciones por año (anual=1, semestral=2, trimestral=4, mensual=12, diaria=365). El resto del desglose (retención, intereses netos, capital final neto) sigue la misma lógica que el interés simple.
 
 ## 🛠️ Stack técnico
 
@@ -48,39 +57,48 @@ La lógica de cálculo es pura, tipada y está aislada de la UI en [`lib/calcula
 
 ```
 ├── app/
-│   ├── layout.tsx              # Layout raíz, metadata SEO, ThemeProvider
-│   ├── page.tsx                # Página principal (calculadora + comparativa)
-│   └── globals.css             # Tokens de diseño (light/dark) y utilidades
+│   ├── layout.tsx                  # Layout raíz, metadata SEO, ThemeProvider
+│   ├── page.tsx                    # Redirige a /depositos
+│   ├── globals.css                 # Tokens de diseño (light/dark) y utilidades
+│   ├── depositos/                  # Módulo "Depósitos" (interés simple)
+│   ├── interes-compuesto/          # Módulo "Interés compuesto"
+│   └── acerca-de/                  # Cómo funciona, módulos y stack técnico
 ├── components/
 │   ├── calculators/
-│   │   └── simple-interest/    # Módulo de la calculadora de interés simple
-│   │       ├── calculator-form.tsx
-│   │       ├── results-panel.tsx
-│   │       ├── comparison-section.tsx
-│   │       ├── comparison-table.tsx
-│   │       └── comparison-cards.tsx
-│   ├── layout/                 # Header y footer del sitio
+│   │   ├── simple-interest/        # UI del módulo Depósitos
+│   │   └── compound-interest/      # UI del módulo Interés compuesto
+│   ├── layout/                     # Header (navegación entre módulos) y footer
 │   ├── theme-provider.tsx
 │   ├── theme-toggle.tsx
-│   └── ui/                     # Componentes base reutilizables (Button, Card, Input...)
+│   └── ui/                         # Componentes base reutilizables (Button, Card, Input, StackedBar...)
 ├── lib/
 │   ├── calculators/
-│   │   └── simple-interest.ts  # Lógica de cálculo pura (sin dependencias de React)
+│   │   ├── shared.ts               # Utilidades comunes (unidades de duración, ids...)
+│   │   ├── simple-interest.ts      # Lógica de interés simple (pura, sin React)
+│   │   └── compound-interest.ts    # Lógica de interés compuesto (pura, sin React)
 │   ├── hooks/
-│   │   └── use-number-input.ts # Input numérico con formato español
-│   └── utils.ts                # Formateadores de moneda/porcentaje/número
+│   │   └── use-number-input.ts     # Input numérico con formato español
+│   └── utils.ts                    # Formateadores de moneda/porcentaje/número
 └── public/
 ```
 
+### Módulos disponibles
+
+| Módulo | Ruta | Descripción |
+|---|---|---|
+| Depósitos | `/depositos` | Interés simple: TIN mensual/trimestral/semestral, retención, comparativa |
+| Interés compuesto | `/interes-compuesto` | Capitalización compuesta, TAE real, frecuencia configurable, comparativa |
+
 ### Arquitectura pensada para crecer
 
-El proyecto sigue el patrón `components/calculators/<nombre-calculadora>/` + `lib/calculators/<nombre-calculadora>.ts`, de modo que añadir una nueva herramienta (interés compuesto, préstamos, hipotecas...) es tan sencillo como:
+Cada calculadora sigue el patrón `components/calculators/<nombre>/` + `lib/calculators/<nombre>.ts`, con su propia ruta en `app/<nombre>/`. Añadir un nuevo módulo (préstamos, hipotecas...) implica:
 
-1. Crear `lib/calculators/compound-interest.ts` con la lógica pura y sus tipos.
-2. Crear `components/calculators/compound-interest/` con el formulario y los resultados, reutilizando los componentes de `components/ui/`.
-3. Añadir la ruta correspondiente en `app/` (por ejemplo `app/interes-compuesto/page.tsx`).
+1. Crear `lib/calculators/<nombre>.ts` con la lógica pura y sus tipos (reutilizando `lib/calculators/shared.ts` cuando aplique).
+2. Crear `components/calculators/<nombre>/` con el formulario, resultados, gráfico y comparativa, reutilizando los componentes de `components/ui/`.
+3. Crear `app/<nombre>/page.tsx` (metadata SEO) + `app/<nombre>/<nombre>-view.tsx` (vista cliente interactiva).
+4. Añadir la entrada correspondiente al array `MODULE_LINKS` en `components/layout/site-header.tsx`.
 
-Los componentes de `components/ui/` (Button, Card, Input, Select, Switch, Tooltip...) son genéricos y se reutilizan en cualquier calculadora futura.
+Los componentes de `components/ui/` (Button, Card, Input, Select, Switch, Tooltip, StackedBar...) son genéricos y se reutilizan en cualquier calculadora futura.
 
 ## 🚀 Desarrollo local
 

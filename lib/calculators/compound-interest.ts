@@ -1,5 +1,5 @@
 /**
- * Motor de cálculo del Interés Simple (módulo "Depósitos").
+ * Motor de cálculo del Interés Compuesto (módulo "Interés compuesto").
  * Lógica pura, sin dependencias de React, fácil de testear y reutilizar.
  */
 import {
@@ -13,11 +13,37 @@ import {
 export type { DurationUnit } from "./shared";
 export { DURATION_UNIT_LABELS, DEFAULT_TAX_RATE, durationToYears } from "./shared";
 
-export interface SimpleInterestInput {
+/** Nº de veces que se capitaliza el interés cada año */
+export type CompoundingFrequency =
+  | "anual"
+  | "semestral"
+  | "trimestral"
+  | "mensual"
+  | "diaria";
+
+export const COMPOUNDING_FREQUENCY_TIMES: Record<CompoundingFrequency, number> = {
+  anual: 1,
+  semestral: 2,
+  trimestral: 4,
+  mensual: 12,
+  diaria: 365,
+};
+
+export const COMPOUNDING_FREQUENCY_LABELS: Record<CompoundingFrequency, string> = {
+  anual: "Anual",
+  semestral: "Semestral",
+  trimestral: "Trimestral",
+  mensual: "Mensual",
+  diaria: "Diaria",
+};
+
+export interface CompoundInterestInput {
   /** Capital inicial en euros */
   principal: number;
   /** TIN anual en % (ej. 3.5 significa 3,5%) */
   annualRate: number;
+  /** Frecuencia de capitalización del interés */
+  compoundingFrequency: CompoundingFrequency;
   /** Duración en la unidad indicada */
   duration: number;
   /** Unidad de la duración */
@@ -26,15 +52,11 @@ export interface SimpleInterestInput {
   taxRate: number;
 }
 
-export interface SimpleInterestResult {
+export interface CompoundInterestResult {
   /** Duración expresada en años (decimal) */
   durationInYears: number;
-  /** TIN mensual equivalente (TIN anual / 12) */
-  monthlyRate: number;
-  /** TIN trimestral equivalente (TIN anual / 4) */
-  quarterlyRate: number;
-  /** TIN semestral equivalente (TIN anual / 2) */
-  semiannualRate: number;
+  /** TAE (Tasa Anual Equivalente) real, en % — (1 + TIN/n)^n − 1 */
+  effectiveAnnualRate: number;
   /** Intereses brutos generados */
   grossInterest: number;
   /** Importe retenido por impuestos */
@@ -47,43 +69,42 @@ export interface SimpleInterestResult {
   finalCapitalNet: number;
   /** Rentabilidad neta total en % sobre el capital inicial */
   netYieldPercent: number;
-  /** Rentabilidad neta anualizada en % (TAE aproximada simple) */
+  /** Rentabilidad neta anualizada en % */
   netYieldAnnualizedPercent: number;
 }
 
 /**
- * Calcula el interés simple completo a partir de los datos de entrada.
- * Fórmula: Interés bruto = Capital × (TIN/100) × (tiempo en años)
+ * Calcula el interés compuesto completo a partir de los datos de entrada.
+ * Fórmula: Capital final bruto = Capital × (1 + TIN / (100 × n)) ^ (n × tiempo)
+ * donde n es el nº de capitalizaciones anuales.
  */
-export function calculateSimpleInterest(
-  input: SimpleInterestInput
-): SimpleInterestResult {
-  const { principal, annualRate, duration, durationUnit, taxRate } = input;
+export function calculateCompoundInterest(
+  input: CompoundInterestInput
+): CompoundInterestResult {
+  const { principal, annualRate, compoundingFrequency, duration, durationUnit, taxRate } =
+    input;
 
   const durationInYears = durationToYears(duration, durationUnit);
+  const n = COMPOUNDING_FREQUENCY_TIMES[compoundingFrequency];
+  const ratePerPeriod = annualRate / 100 / n;
 
-  const monthlyRate = annualRate / 12;
-  const quarterlyRate = annualRate / 4;
-  const semiannualRate = annualRate / 2;
+  const effectiveAnnualRate = (Math.pow(1 + ratePerPeriod, n) - 1) * 100;
 
-  const grossInterest = principal * (annualRate / 100) * durationInYears;
+  const finalCapitalGross =
+    principal * Math.pow(1 + ratePerPeriod, n * durationInYears);
+
+  const grossInterest = finalCapitalGross - principal;
   const taxWithheld = grossInterest * (taxRate / 100);
   const netInterest = grossInterest - taxWithheld;
-
-  const finalCapitalGross = principal + grossInterest;
   const finalCapitalNet = principal + netInterest;
 
-  const netYieldPercent =
-    principal > 0 ? (netInterest / principal) * 100 : 0;
-
+  const netYieldPercent = principal > 0 ? (netInterest / principal) * 100 : 0;
   const netYieldAnnualizedPercent =
     durationInYears > 0 ? netYieldPercent / durationInYears : 0;
 
   return {
     durationInYears,
-    monthlyRate,
-    quarterlyRate,
-    semiannualRate,
+    effectiveAnnualRate,
     grossInterest,
     taxWithheld,
     netInterest,
@@ -94,8 +115,8 @@ export function calculateSimpleInterest(
   };
 }
 
-export function isValidSimpleInterestInput(
-  input: Partial<SimpleInterestInput>
+export function isValidCompoundInterestInput(
+  input: Partial<CompoundInterestInput>
 ): boolean {
   return (
     typeof input.principal === "number" &&
@@ -111,24 +132,25 @@ export function isValidSimpleInterestInput(
 }
 
 /** Escenario nombrado, usado en el modo comparativa */
-export interface SimpleInterestScenario {
+export interface CompoundInterestScenario {
   id: string;
   name: string;
-  input: SimpleInterestInput;
+  input: CompoundInterestInput;
 }
 
-export function createDefaultScenario(
+export function createDefaultCompoundScenario(
   name: string,
-  overrides?: Partial<SimpleInterestInput>
-): SimpleInterestScenario {
+  overrides?: Partial<CompoundInterestInput>
+): CompoundInterestScenario {
   return {
     id: generateScenarioId(),
     name,
     input: {
       principal: 10000,
       annualRate: 3.5,
-      duration: 12,
-      durationUnit: "meses",
+      compoundingFrequency: "anual",
+      duration: 5,
+      durationUnit: "anios",
       taxRate: DEFAULT_TAX_RATE,
       ...overrides,
     },
