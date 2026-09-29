@@ -87,7 +87,11 @@ donde `n` es el número de capitalizaciones por año (anual=1, semestral=2, trim
 | Módulo | Ruta | Descripción |
 |---|---|---|
 | Depósitos | `/depositos` | Interés simple: TIN mensual/trimestral/semestral, retención, comparativa |
-| Interés compuesto | `/interes-compuesto` | Capitalización compuesta, TAE real, frecuencia configurable, comparativa |
+| Interés compuesto | `/interes-compuesto` | Capitalización compuesta, TAE real, frecuencia configurable, evolución anual, comparativa |
+| TAE / TIN | `/tae-tin` | Conversor TIN ↔ TAE según frecuencia de liquidación |
+| Comparativa de depósitos | `/comparativa-depositos` | Hasta 6 productos con plazo, TIN, comisiones, retención y capitalización (simple o compuesta) propios de cada uno |
+
+**Hoja de ruta** (próximos módulos, en `/acerca-de`): préstamo personal, hipoteca (sistema francés), amortización anticipada, tabla de amortización exportable a PDF/CSV.
 
 ### Arquitectura pensada para crecer
 

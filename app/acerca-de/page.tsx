@@ -48,9 +48,12 @@ const HOW_IT_WORKS = [
 const MODULES = [
   { name: "Depósitos (interés simple)", status: "Disponible" as const },
   { name: "Interés compuesto", status: "Disponible" as const },
-  { name: "Préstamos", status: "Próximamente" as const },
-  { name: "Hipotecas", status: "Próximamente" as const },
-  { name: "Planes de pensiones", status: "Próximamente" as const },
+  { name: "TAE / TIN (conversor)", status: "Disponible" as const },
+  { name: "Comparativa de depósitos avanzada", status: "Disponible" as const },
+  { name: "Préstamo personal", status: "Próximamente" as const },
+  { name: "Hipoteca (sistema francés)", status: "Próximamente" as const },
+  { name: "Amortización anticipada", status: "Próximamente" as const },
+  { name: "Tabla de amortización (PDF/CSV)", status: "Próximamente" as const },
 ];
 
 const STACK = [

@@ -7,35 +7,20 @@ import {
   DURATION_UNIT_LABELS,
   DEFAULT_TAX_RATE,
   generateScenarioId,
+  COMPOUNDING_FREQUENCY_TIMES,
+  COMPOUNDING_FREQUENCY_LABELS,
   type DurationUnit,
+  type CompoundingFrequency,
 } from "./shared";
 
-export type { DurationUnit } from "./shared";
-export { DURATION_UNIT_LABELS, DEFAULT_TAX_RATE, durationToYears } from "./shared";
-
-/** Nº de veces que se capitaliza el interés cada año */
-export type CompoundingFrequency =
-  | "anual"
-  | "semestral"
-  | "trimestral"
-  | "mensual"
-  | "diaria";
-
-export const COMPOUNDING_FREQUENCY_TIMES: Record<CompoundingFrequency, number> = {
-  anual: 1,
-  semestral: 2,
-  trimestral: 4,
-  mensual: 12,
-  diaria: 365,
-};
-
-export const COMPOUNDING_FREQUENCY_LABELS: Record<CompoundingFrequency, string> = {
-  anual: "Anual",
-  semestral: "Semestral",
-  trimestral: "Trimestral",
-  mensual: "Mensual",
-  diaria: "Diaria",
-};
+export type { DurationUnit, CompoundingFrequency } from "./shared";
+export {
+  DURATION_UNIT_LABELS,
+  DEFAULT_TAX_RATE,
+  durationToYears,
+  COMPOUNDING_FREQUENCY_TIMES,
+  COMPOUNDING_FREQUENCY_LABELS,
+} from "./shared";
 
 export interface CompoundInterestInput {
   /** Capital inicial en euros */
@@ -155,4 +140,74 @@ export function createDefaultCompoundScenario(
       ...overrides,
     },
   };
+}
+
+export interface YearlyBreakdownRow {
+  /** Número de año (1, 2, 3...) */
+  year: number;
+  /** Etiqueta a mostrar, indica si el último periodo es parcial */
+  label: string;
+  /** Capital al inicio del año */
+  startCapital: number;
+  /** Interés bruto generado durante el año */
+  interestGross: number;
+  /** Capital bruto al final del año */
+  endCapital: number;
+}
+
+const MAX_YEARLY_BREAKDOWN_ROWS = 100;
+
+/**
+ * Genera el desglose año a año de la evolución del capital bruto, útil para
+ * visualizar el efecto de la capitalización compuesta a lo largo del tiempo.
+ * Si la duración no es un número entero de años, el último periodo se marca
+ * como parcial y representa lo que queda hasta la duración total.
+ */
+export function calculateCompoundInterestYearlyBreakdown(
+  input: CompoundInterestInput
+): YearlyBreakdownRow[] {
+  const { principal, annualRate, compoundingFrequency, duration, durationUnit } =
+    input;
+
+  const durationInYears = durationToYears(duration, durationUnit);
+  if (principal <= 0 || durationInYears <= 0) return [];
+
+  const n = COMPOUNDING_FREQUENCY_TIMES[compoundingFrequency];
+  const ratePerPeriod = annualRate / 100 / n;
+
+  const capitalAt = (years: number) =>
+    principal * Math.pow(1 + ratePerPeriod, n * years);
+
+  const rows: YearlyBreakdownRow[] = [];
+  const fullYears = Math.min(
+    Math.floor(durationInYears),
+    MAX_YEARLY_BREAKDOWN_ROWS
+  );
+
+  let previousCapital = principal;
+  for (let year = 1; year <= fullYears; year++) {
+    const endCapital = capitalAt(year);
+    rows.push({
+      year,
+      label: `Año ${year}`,
+      startCapital: previousCapital,
+      interestGross: endCapital - previousCapital,
+      endCapital,
+    });
+    previousCapital = endCapital;
+  }
+
+  const remainder = durationInYears - fullYears;
+  if (remainder > 0.001 && rows.length < MAX_YEARLY_BREAKDOWN_ROWS) {
+    const endCapital = capitalAt(durationInYears);
+    rows.push({
+      year: fullYears + 1,
+      label: `Año ${fullYears + 1} (parcial)`,
+      startCapital: previousCapital,
+      interestGross: endCapital - previousCapital,
+      endCapital,
+    });
+  }
+
+  return rows;
 }

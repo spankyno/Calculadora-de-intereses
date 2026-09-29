@@ -1,19 +1,26 @@
 "use client";
 
-import { TrendingUp, Receipt, Wallet, Landmark } from "lucide-react";
+import * as React from "react";
+import { TrendingUp, Receipt, Wallet, Landmark, ChevronDown } from "lucide-react";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { ResultsBreakdownChart } from "./results-breakdown-chart";
-import type { SimpleInterestResult } from "@/lib/calculators/simple-interest";
+import { ExtendedDetails } from "./extended-details";
+import type {
+  SimpleInterestInput,
+  SimpleInterestResult,
+} from "@/lib/calculators/simple-interest";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 interface ResultsPanelProps {
+  input: SimpleInterestInput;
   result: SimpleInterestResult;
   principal: number;
 }
 
-export function ResultsPanel({ result, principal }: ResultsPanelProps) {
+export function ResultsPanel({ input, result, principal }: ResultsPanelProps) {
   const hasValidPrincipal = principal > 0;
+  const [showMore, setShowMore] = React.useState(false);
 
   return (
     <div className="space-y-8">
@@ -116,6 +123,30 @@ export function ResultsPanel({ result, principal }: ResultsPanelProps) {
             {formatCurrency(result.finalCapitalNet)}
           </p>
         </div>
+      </div>
+
+      {/* Mostrar más: desglose ampliado */}
+      <div>
+        <button
+          type="button"
+          onClick={() => setShowMore((v) => !v)}
+          className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+          aria-expanded={showMore}
+        >
+          {showMore ? "Mostrar menos" : "Mostrar más"}
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 transition-transform duration-200",
+              showMore && "rotate-180"
+            )}
+          />
+        </button>
+
+        {showMore && (
+          <div className="mt-4">
+            <ExtendedDetails input={input} result={result} />
+          </div>
+        )}
       </div>
     </div>
   );

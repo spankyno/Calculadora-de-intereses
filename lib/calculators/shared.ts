@@ -37,3 +37,35 @@ export function generateScenarioId(): string {
     ? crypto.randomUUID()
     : Math.random().toString(36).slice(2);
 }
+
+/** Nº de veces que se capitaliza/liquida el interés cada año */
+export type CompoundingFrequency =
+  | "anual"
+  | "semestral"
+  | "trimestral"
+  | "mensual"
+  | "diaria";
+
+export const COMPOUNDING_FREQUENCY_TIMES: Record<CompoundingFrequency, number> = {
+  anual: 1,
+  semestral: 2,
+  trimestral: 4,
+  mensual: 12,
+  diaria: 365,
+};
+
+export const COMPOUNDING_FREQUENCY_LABELS: Record<CompoundingFrequency, string> = {
+  anual: "Anual",
+  semestral: "Semestral",
+  trimestral: "Trimestral",
+  mensual: "Mensual",
+  diaria: "Diaria",
+};
+
+export const COMPOUNDING_FREQUENCIES: CompoundingFrequency[] = [
+  "anual",
+  "semestral",
+  "trimestral",
+  "mensual",
+  "diaria",
+];

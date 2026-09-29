@@ -111,7 +111,7 @@ export function DepositosView() {
               </div>
             </CardHeader>
             <CardContent>
-              <ResultsPanel result={result} principal={input.principal} />
+              <ResultsPanel input={input} result={result} principal={input.principal} />
             </CardContent>
           </Card>
         </section>

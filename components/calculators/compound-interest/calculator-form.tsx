@@ -200,23 +200,6 @@ export function CalculatorForm({ input, onChange }: CalculatorFormProps) {
             La retención debe estar entre 0 y 100.
           </p>
         )}
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {[0, 19, 21, 23].map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => tax.setValue(preset)}
-              className={cn(
-                "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
-                tax.value === preset
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
-              )}
-            >
-              {preset === 0 ? "Sin retención" : `${preset}%`}
-            </button>
-          ))}
-        </div>
       </div>
     </div>
   );
