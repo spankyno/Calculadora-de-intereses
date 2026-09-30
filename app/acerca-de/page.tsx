@@ -50,7 +50,7 @@ const MODULES = [
   { name: "Interés compuesto", status: "Disponible" as const },
   { name: "TAE / TIN (conversor)", status: "Disponible" as const },
   { name: "Comparativa de depósitos avanzada", status: "Disponible" as const },
-  { name: "Préstamo personal", status: "Próximamente" as const },
+  { name: "Préstamo personal", status: "Disponible" as const },
   { name: "Hipoteca (sistema francés)", status: "Próximamente" as const },
   { name: "Amortización anticipada", status: "Próximamente" as const },
   { name: "Tabla de amortización (PDF/CSV)", status: "Próximamente" as const },

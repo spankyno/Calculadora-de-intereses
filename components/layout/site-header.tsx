@@ -12,6 +12,7 @@ const MODULE_LINKS = [
   { href: "/interes-compuesto", label: "Interés compuesto" },
   { href: "/tae-tin", label: "TAE / TIN" },
   { href: "/comparativa-depositos", label: "Comparativa" },
+  { href: "/prestamo-personal", label: "Préstamo" },
 ];
 
 export function SiteHeader() {
