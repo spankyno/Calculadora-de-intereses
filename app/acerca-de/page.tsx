@@ -51,13 +51,14 @@ const MODULES = [
   { name: "TAE / TIN (conversor)", status: "Disponible" as const },
   { name: "Comparativa de depósitos avanzada", status: "Disponible" as const },
   { name: "Préstamo personal", status: "Disponible" as const },
-  { name: "Hipoteca (sistema francés)", status: "Próximamente" as const },
-  { name: "Amortización anticipada", status: "Próximamente" as const },
-  { name: "Tabla de amortización (PDF/CSV)", status: "Próximamente" as const },
+  { name: "Hipoteca (sistema francés)", status: "Disponible" as const },
+  { name: "Amortización anticipada", status: "Disponible" as const },
+  { name: "Tabla de amortización (PDF/CSV, mes/año)", status: "Disponible" as const },
+  { name: "Letras del Tesoro", status: "Disponible" as const },
 ];
 
 const STACK = [
-  { layer: "Framework", tech: "Next.js 14 (App Router)" },
+  { layer: "Framework", tech: "Next.js 16 (App Router)" },
   { layer: "Lenguaje", tech: "TypeScript" },
   { layer: "Estilos", tech: "Tailwind CSS + componentes propios estilo shadcn/ui" },
   { layer: "Primitivas accesibles", tech: "Radix UI (Select, Switch, Tooltip)" },
@@ -65,6 +66,7 @@ const STACK = [
   { layer: "Tema claro/oscuro", tech: "next-themes" },
   { layer: "Tipografía", tech: "Fraunces + Manrope (self-hosted, sin Google Fonts)" },
   { layer: "Estado", tech: "React hooks — sin librerías de estado externas" },
+  { layer: "Exportación PDF/CSV", tech: "jsPDF + jspdf-autotable (en el navegador, sin backend)" },
   { layer: "Backend", tech: "Ninguno — 100% estático y del lado del cliente" },
   { layer: "Despliegue", tech: "Vercel / Cloudflare Pages" },
 ];

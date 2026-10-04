@@ -90,8 +90,20 @@ donde `n` es el número de capitalizaciones por año (anual=1, semestral=2, trim
 | Interés compuesto | `/interes-compuesto` | Capitalización compuesta, TAE real, frecuencia configurable, evolución anual, comparativa |
 | TAE / TIN | `/tae-tin` | Conversor TIN ↔ TAE según frecuencia de liquidación |
 | Comparativa de depósitos | `/comparativa-depositos` | Hasta 6 productos con plazo, TIN, comisiones, retención y capitalización (simple o compuesta) propios de cada uno |
+| Préstamo personal | `/prestamo-personal` | Sistema de amortización francés: cuota mensual, TAE real (con comisión de apertura), tabla de amortización mensual exportable a CSV |
+| Hipoteca | `/hipoteca` | Tipo fijo o variable (Euríbor + diferencial), TAE real, cuadro de amortización completo y simulador de amortización anticipada (reducir cuota vs. reducir plazo) |
+| Amortización anticipada | `/amortizacion-anticipada` | Módulo dedicado: compara "reducir cuota" vs "reducir plazo" para cualquier préstamo o hipoteca, con cuadro de amortización completo y CSV descargable para cada estrategia |
+| Letras del Tesoro | `/letras-tesoro` | Precio de adquisición al descuento, sobrante de la suscripción, importes brutos/netos y comparativa de rentabilidad entre los plazos de 3, 6, 9 y 12 meses |
 
-**Hoja de ruta** (próximos módulos, en `/acerca-de`): préstamo personal, hipoteca (sistema francés), amortización anticipada, tabla de amortización exportable a PDF/CSV.
+El motor de amortización francesa (`lib/calculators/loan-math.ts`) y la tabla de amortización (`components/calculators/shared/amortization-table.tsx`) están compartidos entre Préstamo personal, Hipoteca y Amortización anticipada para no duplicar lógica. La tabla admite vista mes a mes o año a año, y exportación a CSV y a PDF (generado en el propio navegador con `jspdf` + `jspdf-autotable`, sin backend).
+
+✅ **Hoja de ruta completa** — los 9 módulos planteados están disponibles. Nuevos módulos (p. ej. planes de pensiones, fondos indexados) pueden añadirse siguiendo el mismo patrón `lib/calculators/<nombre>.ts` + `components/calculators/<nombre>/` + `app/<nombre>/`, descrito más abajo en "Arquitectura pensada para crecer".
+
+## 🔒 Seguridad
+
+El proyecto usa **Next.js 16** (actualizado desde 14 durante el desarrollo tras detectar que `npm audit` reportaba vulnerabilidades, incluida una crítica, sin parche disponible en ninguna versión de la rama 14.x ni 15.x).
+
+`npm audit --omit=dev` — las dependencias que realmente se publican en la app — no reporta **ninguna** vulnerabilidad. `npm audit` a secas sí reporta 8 de severidad alta, pero todas están confinadas a herramientas de *desarrollo* (el watcher de archivos de Tailwind CSS y la resolución de patrones glob de ESLint, vía la cadena `braces` → `chokidar`/`micromatch`), que no se ejecutan nunca en la aplicación desplegada ni procesan datos de usuarios — solo los propios archivos del proyecto en `npm run build`/`npm run dev`. Se revisarán cuando Tailwind CSS publique una versión 3.x que corrija la cadena, o al evaluar la migración a Tailwind 4 más adelante.
 
 ### Arquitectura pensada para crecer
 

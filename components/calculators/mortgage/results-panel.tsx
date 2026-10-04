@@ -7,23 +7,21 @@ import {
   Landmark,
   Repeat,
   ChevronDown,
-  CreditCard,
+  Home,
 } from "lucide-react";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { DetailTable, type DetailRow } from "@/components/ui/detail-table";
-import { ResultsBreakdownChart } from "./results-breakdown-chart";
 import { AmortizationTable } from "@/components/calculators/shared/amortization-table";
-import type {
-  PersonalLoanInput,
-  PersonalLoanResult,
-} from "@/lib/calculators/personal-loan";
-import { LOAN_DURATION_UNIT_LABELS } from "@/lib/calculators/personal-loan";
+import { ResultsBreakdownChart } from "./results-breakdown-chart";
+import { EarlyRepaymentSimulator } from "./early-repayment-simulator";
+import type { MortgageInput, MortgageResult } from "@/lib/calculators/mortgage";
+import { MORTGAGE_DURATION_UNIT_LABELS } from "@/lib/calculators/mortgage";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 interface ResultsPanelProps {
-  input: PersonalLoanInput;
-  result: PersonalLoanResult;
+  input: MortgageInput;
+  result: MortgageResult;
 }
 
 export function ResultsPanel({ input, result }: ResultsPanelProps) {
@@ -31,20 +29,26 @@ export function ResultsPanel({ input, result }: ResultsPanelProps) {
   const [showMore, setShowMore] = React.useState(false);
 
   const detailRows: DetailRow[] = [
-    { label: "Capital del préstamo", value: formatCurrency(input.principal) },
-    { label: "TIN anual (nominal)", value: formatPercent(input.annualRate) },
+    { label: "Capital hipotecado", value: formatCurrency(input.principal) },
+    {
+      label: input.rateType === "fijo" ? "TIN fijo" : "TIN (Euríbor + diferencial)",
+      value: formatPercent(result.annualRate),
+    },
     {
       label: "TAE (tasa anual equivalente)",
       value: formatPercent(result.effectiveAnnualRate),
     },
     {
       label: "Plazo",
-      value: `${input.duration} ${LOAN_DURATION_UNIT_LABELS[input.durationUnit]} (${result.totalMonths} cuotas)`,
+      value: `${input.duration} ${MORTGAGE_DURATION_UNIT_LABELS[input.durationUnit]} (${result.totalMonths} cuotas)`,
     },
     { label: "Cuota mensual", value: formatCurrency(result.monthlyPayment) },
     {
       label: "Comisión de apertura",
-      value: `${formatPercent(input.openingFeePercent, 2)} — ${formatCurrency(result.openingFeeAmount)}`,
+      value:
+        input.openingFeePercent > 0
+          ? `${formatPercent(input.openingFeePercent, 2)} — ${formatCurrency(result.openingFeeAmount)}`
+          : "Sin comisión",
     },
     {
       label: "Importe neto recibido",
@@ -88,7 +92,7 @@ export function ResultsPanel({ input, result }: ResultsPanelProps) {
             </span>
           </span>
           <span className="flex items-center gap-1.5">
-            <CreditCard className="h-3.5 w-3.5 text-gold" />
+            <Home className="h-3.5 w-3.5 text-gold" />
             {result.totalMonths} cuotas
           </span>
         </div>
@@ -101,14 +105,18 @@ export function ResultsPanel({ input, result }: ResultsPanelProps) {
           label="Intereses totales"
           value={formatCurrency(result.totalInterest)}
           tone="tax"
-          tooltip="Suma de todos los intereses que pagarás a lo largo de la vida del préstamo."
+          tooltip="Suma de todos los intereses que pagarás a lo largo de la vida de la hipoteca."
         />
         <MetricCard
           icon={<Wallet className="h-4 w-4" />}
           label="Comisión de apertura"
-          value={formatCurrency(result.openingFeeAmount)}
+          value={
+            result.openingFeeAmount > 0
+              ? formatCurrency(result.openingFeeAmount)
+              : "—"
+          }
           tone="tax"
-          tooltip="Importe que el banco descuenta del capital al formalizar el préstamo."
+          tooltip="Importe que el banco descuenta del capital al formalizar la hipoteca."
         />
         <MetricCard
           icon={<Landmark className="h-4 w-4" />}
@@ -130,7 +138,7 @@ export function ResultsPanel({ input, result }: ResultsPanelProps) {
             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
               TAE — Tasa Anual Equivalente
             </p>
-            <InfoTooltip text="El coste real anual del préstamo, incluyendo el efecto de la comisión de apertura. Es la cifra que debes comparar entre distintas ofertas." />
+            <InfoTooltip text="El coste real anual de la hipoteca, incluyendo el efecto de la comisión de apertura." />
           </div>
           <p className="font-display text-lg font-medium tabular-nums">
             {formatPercent(result.effectiveAnnualRate)}
@@ -138,7 +146,7 @@ export function ResultsPanel({ input, result }: ResultsPanelProps) {
         </div>
       </div>
 
-      {/* Mostrar más: desglose ampliado + tabla de amortización */}
+      {/* Mostrar más: desglose ampliado + amortización anticipada + cuadro completo */}
       <div>
         <button
           type="button"
@@ -158,10 +166,11 @@ export function ResultsPanel({ input, result }: ResultsPanelProps) {
         {showMore && (
           <div className="mt-4 space-y-5">
             <DetailTable rows={detailRows} />
+            <EarlyRepaymentSimulator loanInput={input} loanResult={result} />
             <AmortizationTable
               schedule={result.schedule}
-              fileName="tabla-amortizacion-prestamo"
-              title="Préstamo personal — Tabla de amortización"
+              fileName="cuadro-amortizacion-hipoteca"
+              title="Hipoteca — Cuadro de amortización"
             />
           </div>
         )}

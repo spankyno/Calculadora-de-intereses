@@ -13,6 +13,9 @@ const MODULE_LINKS = [
   { href: "/tae-tin", label: "TAE / TIN" },
   { href: "/comparativa-depositos", label: "Comparativa" },
   { href: "/prestamo-personal", label: "Préstamo" },
+  { href: "/hipoteca", label: "Hipoteca" },
+  { href: "/amortizacion-anticipada", label: "Amortización" },
+  { href: "/letras-tesoro", label: "Letras" },
 ];
 
 export function SiteHeader() {
@@ -56,7 +59,7 @@ export function SiteHeader() {
           </div>
         </div>
 
-        <nav className="flex min-w-0 items-center gap-1 overflow-x-auto [mask-image:linear-gradient(to_right,black_88%,transparent)] [-webkit-mask-image:linear-gradient(to_right,black_88%,transparent)] sm:order-2 sm:[mask-image:none] sm:[-webkit-mask-image:none]">
+        <nav className="flex min-w-0 items-center gap-1 overflow-x-auto [mask-image:linear-gradient(to_right,transparent,black_24px,black_calc(100%-24px),transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_24px,black_calc(100%-24px),transparent)] sm:order-2">
           {MODULE_LINKS.map((link) => {
             const active = pathname?.startsWith(link.href);
             return (
