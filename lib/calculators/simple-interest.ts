@@ -4,7 +4,6 @@
  */
 import {
   durationToYears,
-  DURATION_UNIT_LABELS,
   DEFAULT_TAX_RATE,
   generateScenarioId,
   type DurationUnit,

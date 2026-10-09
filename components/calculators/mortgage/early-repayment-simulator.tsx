@@ -11,7 +11,7 @@ import {
   type MortgageResult,
 } from "@/lib/calculators/mortgage";
 import { useNumberInput } from "@/lib/hooks/use-number-input";
-import { cn, formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 
 interface EarlyRepaymentSimulatorProps {
   loanInput: MortgageInput;

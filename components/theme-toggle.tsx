@@ -7,9 +7,12 @@ import { cn } from "@/lib/utils";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => setMounted(true), []);
+  // false en servidor y en la hidratación inicial; true ya en el cliente
+  const mounted = React.useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   if (!mounted) {
     return <div className="h-10 w-10" />;

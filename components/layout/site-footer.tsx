@@ -1,17 +1,20 @@
 import Link from "next/link";
+import { AUTHOR } from "@/lib/site-config";
 
 const FOOTER_LINKS = [
-  { label: "Acerca de", href: "/acerca-de", external: false },
+  { label: "Acerca de", href: "/acerca-de", external: false, rel: undefined },
   {
     label: "Contacto",
-    href: "https://aitorsanchez.pages.dev/contacto",
+    href: AUTHOR.contactUrl,
     external: true,
+    rel: "me",
   },
-  { label: "Blog", href: "https://aitorsanchez.pages.dev/", external: true },
+  { label: "Blog", href: AUTHOR.blogUrl, external: true, rel: "me" },
   {
     label: "Más apps",
-    href: "https://aitorhub.vercel.app/",
+    href: AUTHOR.hubUrl,
     external: true,
+    rel: "me",
   },
 ];
 
@@ -20,7 +23,15 @@ export function SiteFooter() {
     <footer className="print:hidden">
       <div className="container flex flex-col gap-4 border-t border-border py-8 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs leading-relaxed text-muted-foreground">
-          Aitor Sánchez Gutiérrez © 2026 — Reservados todos los derechos
+          <a
+            href={AUTHOR.blogUrl}
+            target="_blank"
+            rel="me noopener noreferrer"
+            className="font-medium transition-colors hover:text-foreground hover:underline underline-offset-4"
+          >
+            {AUTHOR.name}
+          </a>{" "}
+          © 2026 — Reservados todos los derechos
         </p>
         <nav aria-label="Enlaces del pie de página">
           <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-medium text-muted-foreground">
@@ -30,7 +41,7 @@ export function SiteFooter() {
                   <a
                     href={link.href}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel={`${link.rel ?? ""} noopener noreferrer`.trim()}
                     className="transition-colors hover:text-foreground hover:underline underline-offset-4"
                   >
                     {link.label}

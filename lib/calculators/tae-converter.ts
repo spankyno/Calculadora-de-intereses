@@ -9,7 +9,6 @@
  */
 import {
   COMPOUNDING_FREQUENCY_TIMES,
-  COMPOUNDING_FREQUENCY_LABELS,
   COMPOUNDING_FREQUENCIES,
   type CompoundingFrequency,
 } from "./shared";

@@ -99,11 +99,25 @@ El motor de amortización francesa (`lib/calculators/loan-math.ts`) y la tabla d
 
 ✅ **Hoja de ruta completa** — los 9 módulos planteados están disponibles. Nuevos módulos (p. ej. planes de pensiones, fondos indexados) pueden añadirse siguiendo el mismo patrón `lib/calculators/<nombre>.ts` + `components/calculators/<nombre>/` + `app/<nombre>/`, descrito más abajo en "Arquitectura pensada para crecer".
 
+## 🔍 SEO
+
+- **Open Graph / Twitter Cards por página**: cada uno de los 9 módulos tiene su propio `title`, `description`, `url` e imagen (`/public/og-image.png`, declarada como 1424×752), en vez de heredar los genéricos del layout raíz.
+- **JSON-LD** (`WebSite` + `Person`) en `app/layout.tsx`, con `sameAs` enlazando el blog, el hub y el contacto del autor.
+- **`sitemap.xml`** (`app/sitemap.ts`) y **`robots.txt`** (`app/robots.ts`), generados a partir de `lib/site-config.ts`.
+- **`alternates.canonical`** en todas las páginas.
+- **Favicon y apple-icon** generados en código (`app/icon.tsx`, `app/apple-icon.tsx`, vía `next/og`) con el mismo logo del header.
+- **`manifest.webmanifest`** (`app/manifest.ts`) para instalación como PWA básica.
+- **`rel="me"`** en los enlaces del autor (footer y sección "Autor" de `/acerca-de`) hacia blog, hub y contacto.
+
+Toda la configuración (dominio, autor, enlaces) vive en un único sitio: `lib/site-config.ts`. El dominio de producción configurado es `https://calculadora-de-intereses-coral.vercel.app` (sin barra final: se concatena con las rutas).
+
+> Si cambias de dominio, edita `SITE_URL` en `lib/site-config.ts`: de él salen las URLs canónicas, el sitemap y las rutas absolutas de las imágenes Open Graph. Si sustituyes `og-image.png` por otra de distinto tamaño, actualiza también `width`/`height` en `app/layout.tsx` y en los `page.tsx` de cada módulo.
+
 ## 🔒 Seguridad
 
 El proyecto usa **Next.js 16** (actualizado desde 14 durante el desarrollo tras detectar que `npm audit` reportaba vulnerabilidades, incluida una crítica, sin parche disponible en ninguna versión de la rama 14.x ni 15.x).
 
-`npm audit --omit=dev` — las dependencias que realmente se publican en la app — no reporta **ninguna** vulnerabilidad. `npm audit` a secas sí reporta 8 de severidad alta, pero todas están confinadas a herramientas de *desarrollo* (el watcher de archivos de Tailwind CSS y la resolución de patrones glob de ESLint, vía la cadena `braces` → `chokidar`/`micromatch`), que no se ejecutan nunca en la aplicación desplegada ni procesan datos de usuarios — solo los propios archivos del proyecto en `npm run build`/`npm run dev`. Se revisarán cuando Tailwind CSS publique una versión 3.x que corrija la cadena, o al evaluar la migración a Tailwind 4 más adelante.
+`npm audit --omit=dev` — las dependencias que realmente se publican en la app — no reporta **ninguna** vulnerabilidad (se actualizó `source-map-js` a 1.2.2 para corregir un aviso de severidad alta que afectaba a `postcss`, dependencia de Next.js). `npm audit` a secas sí reporta hallazgos de severidad alta/moderada, pero todos están confinados a herramientas de *desarrollo* (el watcher de archivos de Tailwind CSS y la resolución de patrones glob de ESLint, vía las cadenas `braces` → `chokidar`/`micromatch` y `postcss-nested` → `postcss-selector-parser`), que no se ejecutan nunca en la aplicación desplegada ni procesan datos de usuarios: solo los propios archivos del proyecto durante `npm run build`/`npm run dev`. Se revisarán cuando Tailwind CSS publique una versión 3.x que corrija la cadena, o al evaluar la migración a Tailwind 4.
 
 ### Arquitectura pensada para crecer
 

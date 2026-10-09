@@ -5,12 +5,9 @@
  */
 import {
   durationToYears,
-  DURATION_UNIT_LABELS,
   DEFAULT_TAX_RATE,
   generateScenarioId,
   COMPOUNDING_FREQUENCY_TIMES,
-  COMPOUNDING_FREQUENCY_LABELS,
-  COMPOUNDING_FREQUENCIES,
   type DurationUnit,
   type CompoundingFrequency,
 } from "./shared";

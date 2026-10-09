@@ -7,15 +7,44 @@ import {
   ShieldCheck,
   Layers,
   ArrowLeft,
+  UserRound,
+  Rss,
+  Mail,
+  LayoutGrid,
 } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AUTHOR } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Acerca de",
   description:
-    "Cómo funciona la Calculadora de Intereses, qué módulos incluye y con qué tecnología está construida.",
+    "Cómo funciona la Calculadora de Intereses, qué módulos incluye, con qué tecnología está construida y quién hay detrás.",
+  alternates: {
+    canonical: "/acerca-de",
+  },
+  openGraph: {
+    title: "Acerca de · Calculadora de Intereses",
+    description:
+      "Cómo funciona la Calculadora de Intereses, qué módulos incluye, con qué tecnología está construida y quién hay detrás.",
+    url: "/acerca-de",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1424,
+        height: 752,
+        alt: "Acerca de · Calculadora de Intereses",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Acerca de · Calculadora de Intereses",
+    description:
+      "Cómo funciona la Calculadora de Intereses, qué módulos incluye, con qué tecnología está construida y quién hay detrás.",
+    images: ["/og-image.png"],
+  },
 };
 
 const HOW_IT_WORKS = [
@@ -174,6 +203,59 @@ export default function AcercaDePage() {
                   <span className="text-sm text-foreground">{row.tech}</span>
                 </div>
               ))}
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Autor */}
+        <section className="pb-14">
+          <div className="mb-5 flex items-center gap-2">
+            <UserRound className="h-4 w-4 text-muted-foreground" />
+            <h2 className="font-display text-xl font-medium tracking-tight">
+              Autor
+            </h2>
+          </div>
+          <Card>
+            <CardContent className="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="font-display text-lg font-medium">
+                  {AUTHOR.name}
+                </p>
+                <p className="mt-1 max-w-md text-sm leading-relaxed text-muted-foreground">
+                  Diseño y desarrollo de esta calculadora y del resto de
+                  herramientas del hub. Si tienes dudas, sugerencias o
+                  encuentras algún error, puedes escribirme.
+                </p>
+              </div>
+              <div className="flex shrink-0 flex-wrap gap-2">
+                <a
+                  href={AUTHOR.blogUrl}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-2 text-xs font-medium transition-colors hover:border-primary/40 hover:text-foreground"
+                >
+                  <Rss className="h-3.5 w-3.5" />
+                  Blog
+                </a>
+                <a
+                  href={AUTHOR.hubUrl}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-2 text-xs font-medium transition-colors hover:border-primary/40 hover:text-foreground"
+                >
+                  <LayoutGrid className="h-3.5 w-3.5" />
+                  Más apps
+                </a>
+                <a
+                  href={AUTHOR.contactUrl}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-2 text-xs font-medium transition-colors hover:border-primary/40 hover:text-foreground"
+                >
+                  <Mail className="h-3.5 w-3.5" />
+                  Contacto
+                </a>
+              </div>
             </CardContent>
           </Card>
         </section>
