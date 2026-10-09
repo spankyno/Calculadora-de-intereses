@@ -20,8 +20,6 @@ interface CalculatorFormProps {
 
 export function CalculatorForm({ input, onChange }: CalculatorFormProps) {
   const capital = useNumberInput(input.capitalToInvest);
-  const commission = useNumberInput(input.commissionPercent);
-  const tax = useNumberInput(input.taxRate);
   const rate3m = useNumberInput(input.rates["3m"]);
   const rate6m = useNumberInput(input.rates["6m"]);
   const rate9m = useNumberInput(input.rates["9m"]);
@@ -38,8 +36,6 @@ export function CalculatorForm({ input, onChange }: CalculatorFormProps) {
     onChange({
       ...input,
       capitalToInvest: Number.isFinite(capital.value) ? capital.value : 0,
-      commissionPercent: Number.isFinite(commission.value) ? commission.value : 0,
-      taxRate: Number.isFinite(tax.value) ? tax.value : 0,
       rates: {
         "3m": Number.isFinite(rate3m.value) ? rate3m.value : 0,
         "6m": Number.isFinite(rate6m.value) ? rate6m.value : 0,
@@ -50,8 +46,6 @@ export function CalculatorForm({ input, onChange }: CalculatorFormProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     capital.raw,
-    commission.raw,
-    tax.raw,
     rate3m.raw,
     rate6m.raw,
     rate9m.raw,
@@ -66,8 +60,8 @@ export function CalculatorForm({ input, onChange }: CalculatorFormProps) {
       {/* Capital a invertir */}
       <div className="space-y-2">
         <div className="flex items-center gap-1.5">
-          <Label htmlFor="capital">Capital a desembolsar</Label>
-          <InfoTooltip text={`Cada letra tiene un nominal de ${NOMINAL_PER_LETRA.toLocaleString("es-ES")} €. Al comprarse en unidades enteras, es normal que no se pueda invertir el 100% del capital: el resto queda como sobrante.`} />
+          <Label htmlFor="capital">Capital a invertir</Label>
+          <InfoTooltip text={`Cada letra tiene un nominal de ${NOMINAL_PER_LETRA.toLocaleString("es-ES")} €. Se compran en unidades enteras: el nº de letras es el capital dividido entre 1.000 € (redondeado a la baja).`} />
         </div>
         <div className="relative">
           <Input
@@ -116,48 +110,6 @@ export function CalculatorForm({ input, onChange }: CalculatorFormProps) {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Comisión */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-1.5">
-          <Label htmlFor="commission">Comisión del bróker</Label>
-          <InfoTooltip text="Comprar directamente en el Tesoro Público (tesoro.es) no tiene comisión. Algunos bancos sí cobran una comisión de compra o custodia." />
-        </div>
-        <div className="relative">
-          <Input
-            id="commission"
-            inputMode="decimal"
-            value={commission.raw}
-            onChange={(e) => commission.onChange(e.target.value)}
-            placeholder="0"
-            className="pr-10"
-          />
-          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-            %
-          </span>
-        </div>
-      </div>
-
-      {/* Impuestos */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-1.5">
-          <Label htmlFor="tax">Tipo impositivo (IRPF)</Label>
-          <InfoTooltip text="Las letras del Tesoro no suelen tener retención a cuenta, pero el rendimiento tributa igualmente en la base del ahorro de tu declaración de la renta." />
-        </div>
-        <div className="relative">
-          <Input
-            id="tax"
-            inputMode="decimal"
-            value={tax.raw}
-            onChange={(e) => tax.onChange(e.target.value)}
-            placeholder="19"
-            className="pr-10"
-          />
-          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-            %
-          </span>
         </div>
       </div>
     </div>

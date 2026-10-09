@@ -14,25 +14,25 @@ interface ComparisonChartProps {
 export function ComparisonChart({ results }: ComparisonChartProps) {
   const bestTerm = results.reduce<TreasuryBillResult | null>((best, curr) => {
     if (!best) return curr;
-    return curr.netYieldAnnualizedPercent > best.netYieldAnnualizedPercent
+    return curr.grossYieldAnnualizedPercent > best.grossYieldAnnualizedPercent
       ? curr
       : best;
   }, null);
 
   const maxValue = Math.max(
-    ...results.map((r) => Math.max(r.netYieldAnnualizedPercent, 0)),
+    ...results.map((r) => Math.max(r.grossYieldAnnualizedPercent, 0)),
     0.0001
   );
 
   return (
     <div className="rounded-2xl border border-border p-5">
       <p className="mb-4 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-        Rentabilidad anualizada por plazo
+        Rentabilidad bruta anualizada por plazo
       </p>
       <div className="space-y-4">
         {results.map((result) => {
           const pct = Math.max(
-            (result.netYieldAnnualizedPercent / maxValue) * 100,
+            (result.grossYieldAnnualizedPercent / maxValue) * 100,
             2
           );
           const isBest = result === bestTerm;
@@ -44,7 +44,7 @@ export function ComparisonChart({ results }: ComparisonChartProps) {
                   {LETRA_TERM_LABELS[result.term]}
                 </span>
                 <span className="num-tabular font-semibold text-foreground">
-                  {formatPercent(result.netYieldAnnualizedPercent)}
+                  {formatPercent(result.grossYieldAnnualizedPercent)}
                 </span>
               </div>
               <div className="h-3.5 w-full overflow-hidden rounded-full bg-muted">

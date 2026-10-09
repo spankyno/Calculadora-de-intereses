@@ -4,14 +4,14 @@ import { LetrasTesoroView } from "./letras-tesoro-view";
 export const metadata: Metadata = {
   title: "Letras del Tesoro",
   description:
-    "Calcula el precio de adquisición, el sobrante de la suscripción y el importe neto al vencimiento de las Letras del Tesoro, y compara la rentabilidad entre los plazos de 3, 6, 9 y 12 meses.",
+    "Calcula el capital invertido, el sobrante (interés bruto), el coste real de adquisición y la rentabilidad bruta de las Letras del Tesoro, y compara la rentabilidad entre los plazos de 3, 6, 9 y 12 meses.",
   alternates: {
     canonical: "/letras-tesoro",
   },
   openGraph: {
     title: "Letras del Tesoro · Calculadora de Intereses",
     description:
-      "Calcula el precio de adquisición, el sobrante de la suscripción y el importe neto al vencimiento de las Letras del Tesoro, y compara la rentabilidad entre los plazos de 3, 6, 9 y 12 meses.",
+      "Calcula el capital invertido, el sobrante (interés bruto), el coste real de adquisición y la rentabilidad bruta de las Letras del Tesoro, y compara la rentabilidad entre los plazos de 3, 6, 9 y 12 meses.",
     url: "/letras-tesoro",
     images: [
       {
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Letras del Tesoro · Calculadora de Intereses",
     description:
-      "Calcula el precio de adquisición, el sobrante de la suscripción y el importe neto al vencimiento de las Letras del Tesoro, y compara la rentabilidad entre los plazos de 3, 6, 9 y 12 meses.",
+      "Calcula el capital invertido, el sobrante (interés bruto), el coste real de adquisición y la rentabilidad bruta de las Letras del Tesoro, y compara la rentabilidad entre los plazos de 3, 6, 9 y 12 meses.",
     images: ["/og-image.png"],
   },
 };

@@ -15,7 +15,7 @@ interface ComparisonCardsProps {
 export function ComparisonCards({ results }: ComparisonCardsProps) {
   const bestTerm = results.reduce<TreasuryBillResult | null>((best, curr) => {
     if (!best) return curr;
-    return curr.netYieldAnnualizedPercent > best.netYieldAnnualizedPercent
+    return curr.grossYieldAnnualizedPercent > best.grossYieldAnnualizedPercent
       ? curr
       : best;
   }, null);
@@ -40,34 +40,31 @@ export function ComparisonCards({ results }: ComparisonCardsProps) {
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
             {result.numLetras} letras · {formatCurrency(result.capitalInvested)} invertidos
-            {result.leftover > 0 && (
-              <> · {formatCurrency(result.leftover)} sobrante</>
-            )}
           </p>
 
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div>
               <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                Importe bruto
+                Sobrante (interés bruto)
               </p>
-              <p className="font-display text-lg font-medium num-tabular">
-                {formatCurrency(result.grossMaturityAmount)}
+              <p className="font-display text-lg font-medium text-gain num-tabular">
+                {formatCurrency(result.leftover)}
               </p>
             </div>
             <div>
               <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                Rent. anualizada
+                Coste real
               </p>
               <p className="font-display text-lg font-medium num-tabular">
-                {formatPercent(result.netYieldAnnualizedPercent)}
+                {formatCurrency(result.realCost)}
               </p>
             </div>
             <div className="col-span-2 border-t border-border pt-3">
               <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                Importe neto al vencimiento
+                Rentabilidad bruta
               </p>
-              <p className="font-display text-xl font-medium text-gain num-tabular">
-                {formatCurrency(result.netMaturityAmount)}
+              <p className="font-display text-xl font-medium num-tabular">
+                {formatPercent(result.grossYieldPercent)}
               </p>
             </div>
           </div>

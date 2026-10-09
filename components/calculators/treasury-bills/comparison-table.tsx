@@ -14,24 +14,22 @@ interface ComparisonTableProps {
 export function ComparisonTable({ results }: ComparisonTableProps) {
   const bestTerm = results.reduce<TreasuryBillResult | null>((best, curr) => {
     if (!best) return curr;
-    return curr.netYieldAnnualizedPercent > best.netYieldAnnualizedPercent
+    return curr.grossYieldAnnualizedPercent > best.grossYieldAnnualizedPercent
       ? curr
       : best;
   }, null);
 
   return (
     <div className="overflow-x-auto rounded-2xl border border-border">
-      <table className="w-full min-w-[920px] border-collapse text-sm">
+      <table className="w-full min-w-[780px] border-collapse text-sm">
         <thead>
           <tr className="border-b border-border bg-muted/40 text-left">
             <Th>Plazo</Th>
             <Th align="right">Nº letras</Th>
             <Th align="right">Capital invertido</Th>
-            <Th align="right">Sobrante</Th>
-            <Th align="right">Importe bruto</Th>
-            <Th align="right">Impuestos</Th>
-            <Th align="right">Importe neto</Th>
-            <Th align="right">Rent. anualizada</Th>
+            <Th align="right">Sobrante (interés bruto)</Th>
+            <Th align="right">Coste real de adquisición</Th>
+            <Th align="right">Rentabilidad bruta</Th>
           </tr>
         </thead>
         <tbody>
@@ -57,22 +55,14 @@ export function ComparisonTable({ results }: ComparisonTableProps) {
               <td className="px-4 py-3.5 text-right num-tabular">
                 {formatCurrency(result.capitalInvested)}
               </td>
-              <td className="px-4 py-3.5 text-right num-tabular text-muted-foreground">
+              <td className="px-4 py-3.5 text-right num-tabular text-gain">
                 {formatCurrency(result.leftover)}
               </td>
               <td className="px-4 py-3.5 text-right num-tabular">
-                {formatCurrency(result.grossMaturityAmount)}
-              </td>
-              <td className="px-4 py-3.5 text-right num-tabular text-tax">
-                {result.taxWithheld > 0
-                  ? `− ${formatCurrency(result.taxWithheld)}`
-                  : "—"}
-              </td>
-              <td className="px-4 py-3.5 text-right num-tabular font-semibold text-gain">
-                {formatCurrency(result.netMaturityAmount)}
+                {formatCurrency(result.realCost)}
               </td>
               <td className="px-4 py-3.5 text-right num-tabular font-semibold">
-                {formatPercent(result.netYieldAnnualizedPercent)}
+                {formatPercent(result.grossYieldPercent)}
               </td>
             </tr>
           ))}

@@ -37,8 +37,8 @@ export function LetrasTesoroView() {
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
             Introduce el capital que quieres destinar y compara de un
             vistazo los 4 plazos habituales (3, 6, 9 y 12 meses): nº de
-            letras, sobrante de la suscripción, impuestos e importe neto
-            al vencimiento.
+            letras, capital invertido, sobrante (interés bruto), coste real
+            de adquisición y rentabilidad bruta.
           </p>
         </section>
 

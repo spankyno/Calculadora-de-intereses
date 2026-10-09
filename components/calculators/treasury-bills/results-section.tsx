@@ -26,11 +26,9 @@ export function ResultsSection({ results }: ResultsSectionProps) {
         `${LETRA_TERM_LABELS[r.term]}`,
         `  Nº letras: ${r.numLetras}`,
         `  Capital invertido: ${formatCurrency(r.capitalInvested)}`,
-        `  Sobrante: ${formatCurrency(r.leftover)}`,
-        `  Importe bruto al vencimiento: ${formatCurrency(r.grossMaturityAmount)}`,
-        `  Impuestos: ${formatCurrency(r.taxWithheld)}`,
-        `  Importe neto al vencimiento: ${formatCurrency(r.netMaturityAmount)}`,
-        `  Rentabilidad neta anualizada: ${formatPercent(r.netYieldAnnualizedPercent)}`,
+        `  Sobrante (interés bruto): ${formatCurrency(r.leftover)}`,
+        `  Coste real de adquisición: ${formatCurrency(r.realCost)}`,
+        `  Rentabilidad bruta: ${formatPercent(r.grossYieldPercent)}`,
       ].join("\n")
     );
     const text = `Comparativa de Letras del Tesoro\n\n${lines.join("\n\n")}`;

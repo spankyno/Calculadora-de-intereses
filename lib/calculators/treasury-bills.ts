@@ -7,9 +7,14 @@
  * Precio de adquisición = Nominal / (1 + rentabilidad × días/360)
  * (convención ACT/360, la que usa el Tesoro Público en sus subastas)
  *
- * Como las letras se compran en unidades enteras de 1.000 € nominales,
- * el capital que el inversor quiere destinar casi nunca encaja de forma
- * exacta: lo que sobra es el "sobrante de la suscripción".
+ * Mecánica de la suscripción (como en Tesoro Directo):
+ *  - Se solicita un nº entero de letras de 1.000 € nominales.
+ *  - "Capital invertido" = nº de letras × 1.000 € (lo que se reserva).
+ *  - "Sobrante" = interés bruto: la diferencia entre el nominal y el precio
+ *    real de adquisición, que el Tesoro devuelve tras la subasta.
+ *  - "Coste real de adquisición" = Capital invertido − Sobrante.
+ *
+ * No se aplica retención en origen, por lo que no hay tipo impositivo.
  *
  * Lógica pura, sin dependencias de React.
  */
@@ -40,10 +45,6 @@ export const NOMINAL_PER_LETRA = 1000;
 export interface TreasuryBillsInput {
   /** Capital que el inversor quiere destinar a la compra */
   capitalToInvest: number;
-  /** Comisión del bróker/banco, en % sobre el capital invertido */
-  commissionPercent: number;
-  /** Tipo impositivo aplicable (IRPF, base del ahorro), en % */
-  taxRate: number;
   /** Rentabilidad anual simple (TIR) ofrecida en cada plazo, en % */
   rates: Record<LetraTerm, number>;
 }
@@ -53,53 +54,38 @@ export interface TreasuryBillResult {
   days: number;
   /** Precio de adquisición de una letra (por 1.000 € de nominal) */
   price: number;
-  /** Nº de letras enteras que se pueden comprar con el capital indicado */
+  /** Nº de letras enteras: floor(capital / 1.000) */
   numLetras: number;
-  /** Capital realmente invertido (numLetras × precio) */
+  /** Capital invertido = nº de letras × 1.000 € */
   capitalInvested: number;
-  /** Sobrante de la suscripción: lo que no llega a invertirse */
+  /** Sobrante (interés bruto) = Capital invertido − Coste real de adquisición */
   leftover: number;
-  /** Importe bruto a cobrar al vencimiento (numLetras × 1.000 €) */
-  grossMaturityAmount: number;
-  grossInterest: number;
-  commissionAmount: number;
-  taxWithheld: number;
-  netInterest: number;
-  /** Importe neto a cobrar al vencimiento, tras impuestos y comisión */
-  netMaturityAmount: number;
-  /** Rentabilidad neta total, sobre el capital invertido */
-  netYieldPercent: number;
-  /** Rentabilidad neta anualizada (base 360 días) */
-  netYieldAnnualizedPercent: number;
+  /** Coste real de adquisición = Capital invertido − Sobrante */
+  realCost: number;
+  /** Rentabilidad bruta del plazo: (Capital invertido − Coste) / Coste × 100 */
+  grossYieldPercent: number;
+  /** Rentabilidad bruta anualizada (base 360 días), para comparar plazos */
+  grossYieldAnnualizedPercent: number;
 }
 
 export function calculateTreasuryBill(
   input: TreasuryBillsInput,
   term: LetraTerm
 ): TreasuryBillResult {
-  const { capitalToInvest, commissionPercent, taxRate, rates } = input;
+  const { capitalToInvest, rates } = input;
   const days = LETRA_TERM_DAYS[term];
   const annualRate = rates[term];
 
   const price = NOMINAL_PER_LETRA / (1 + (annualRate / 100) * (days / 360));
-  const numLetras =
-    price > 0 ? Math.floor(capitalToInvest / price) : 0;
-  const capitalInvested = numLetras * price;
-  const leftover = Math.max(capitalToInvest - capitalInvested, 0);
+  const numLetras = Math.max(Math.floor(capitalToInvest / NOMINAL_PER_LETRA), 0);
 
-  const grossMaturityAmount = numLetras * NOMINAL_PER_LETRA;
-  const grossInterest = grossMaturityAmount - capitalInvested;
+  const capitalInvested = numLetras * NOMINAL_PER_LETRA;
+  const realCost = numLetras * price;
+  const leftover = capitalInvested - realCost;
 
-  const commissionAmount = capitalInvested * (commissionPercent / 100);
-  const taxWithheld = Math.max(grossInterest, 0) * (taxRate / 100);
-  const netInterest = grossInterest - taxWithheld;
-  const netMaturityAmount = capitalInvested + netInterest - commissionAmount;
-
-  const netYieldPercent =
-    capitalInvested > 0
-      ? ((netMaturityAmount - capitalInvested) / capitalInvested) * 100
-      : 0;
-  const netYieldAnnualizedPercent = netYieldPercent * (360 / days);
+  const grossYieldPercent =
+    realCost > 0 ? ((capitalInvested - realCost) / realCost) * 100 : 0;
+  const grossYieldAnnualizedPercent = grossYieldPercent * (360 / days);
 
   return {
     term,
@@ -108,14 +94,9 @@ export function calculateTreasuryBill(
     numLetras,
     capitalInvested,
     leftover,
-    grossMaturityAmount,
-    grossInterest,
-    commissionAmount,
-    taxWithheld,
-    netInterest,
-    netMaturityAmount,
-    netYieldPercent,
-    netYieldAnnualizedPercent,
+    realCost,
+    grossYieldPercent,
+    grossYieldAnnualizedPercent,
   };
 }
 
@@ -130,20 +111,13 @@ export function isValidTreasuryBillsInput(
 ): boolean {
   return (
     typeof input.capitalToInvest === "number" &&
-    input.capitalToInvest >= NOMINAL_PER_LETRA &&
-    typeof input.commissionPercent === "number" &&
-    input.commissionPercent >= 0 &&
-    typeof input.taxRate === "number" &&
-    input.taxRate >= 0 &&
-    input.taxRate <= 100
+    input.capitalToInvest >= NOMINAL_PER_LETRA
   );
 }
 
 export function createDefaultTreasuryBillsInput(): TreasuryBillsInput {
   return {
     capitalToInvest: 10000,
-    commissionPercent: 0,
-    taxRate: 19,
     rates: {
       "3m": 2.15,
       "6m": 2.25,

@@ -93,7 +93,7 @@ donde `n` es el número de capitalizaciones por año (anual=1, semestral=2, trim
 | Préstamo personal | `/prestamo-personal` | Sistema de amortización francés: cuota mensual, TAE real (con comisión de apertura), tabla de amortización mensual exportable a CSV |
 | Hipoteca | `/hipoteca` | Tipo fijo o variable (Euríbor + diferencial), TAE real, cuadro de amortización completo y simulador de amortización anticipada (reducir cuota vs. reducir plazo) |
 | Amortización anticipada | `/amortizacion-anticipada` | Módulo dedicado: compara "reducir cuota" vs "reducir plazo" para cualquier préstamo o hipoteca, con cuadro de amortización completo y CSV descargable para cada estrategia |
-| Letras del Tesoro | `/letras-tesoro` | Precio de adquisición al descuento, sobrante de la suscripción, importes brutos/netos y comparativa de rentabilidad entre los plazos de 3, 6, 9 y 12 meses |
+| Letras del Tesoro | `/letras-tesoro` | Capital invertido, sobrante (interés bruto), coste real de adquisición, rentabilidad bruta y comparativa de rentabilidad entre los plazos de 3, 6, 9 y 12 meses |
 
 El motor de amortización francesa (`lib/calculators/loan-math.ts`) y la tabla de amortización (`components/calculators/shared/amortization-table.tsx`) están compartidos entre Préstamo personal, Hipoteca y Amortización anticipada para no duplicar lógica. La tabla admite vista mes a mes o año a año, y exportación a CSV y a PDF (generado en el propio navegador con `jspdf` + `jspdf-autotable`, sin backend).
 
