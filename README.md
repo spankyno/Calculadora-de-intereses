@@ -101,7 +101,7 @@ El motor de amortización francesa (`lib/calculators/loan-math.ts`) y la tabla d
 
 ## 🔍 SEO
 
-- **Open Graph / Twitter Cards por página**: cada uno de los 9 módulos tiene su propio `title`, `description`, `url` e imagen (`/public/og-image.png`, declarada como 1424×752), en vez de heredar los genéricos del layout raíz.
+- **Open Graph / Twitter Cards por página**: cada uno de los 9 módulos tiene su propio `title`, `description`, `url` e imagen (`/public/og-image.png`, declarada como 1200×630), en vez de heredar los genéricos del layout raíz.
 - **JSON-LD** (`WebSite` + `Person`) en `app/layout.tsx`, con `sameAs` enlazando el blog, el hub y el contacto del autor.
 - **`sitemap.xml`** (`app/sitemap.ts`) y **`robots.txt`** (`app/robots.ts`), generados a partir de `lib/site-config.ts`.
 - **`alternates.canonical`** en todas las páginas.

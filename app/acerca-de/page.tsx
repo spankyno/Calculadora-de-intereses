@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Calculator,
@@ -32,8 +33,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/og-image.png",
-        width: 1424,
-        height: 752,
+        width: 1200,
+        height: 630,
         alt: "Acerca de · Calculadora de Intereses",
       },
     ],
@@ -123,6 +124,21 @@ export default function AcercaDePage() {
             explicado de forma clara.
           </p>
         </div>
+
+        {/* Imagen */}
+        <section className="pb-14">
+          <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
+            <Image
+              src="/og-image.png"
+              alt="Calculadora de Intereses"
+              width={1200}
+              height={630}
+              sizes="(min-width: 1200px) 1200px, 100vw"
+              className="h-auto w-full"
+              priority
+            />
+          </div>
+        </section>
 
         {/* Cómo funciona */}
         <section className="pb-14">

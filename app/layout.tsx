@@ -48,8 +48,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/og-image.png",
-        width: 1424,
-        height: 752,
+        width: 1200,
+        height: 630,
         alt: SITE_NAME,
       },
     ],
@@ -60,6 +60,9 @@ export const metadata: Metadata = {
     description:
       "Calcula intereses simples, retenciones fiscales y compara depósitos lado a lado.",
     images: ["/og-image.png"],
+  },
+  verification: {
+    google: "MEiDmnJOvnWITHUi0HCLxuoulOEm0oTM4fwQMugxoyY",
   },
   robots: {
     index: true,
@@ -123,6 +126,12 @@ export default function RootLayout({
             <div className="relative z-10">{children}</div>
           </TooltipProvider>
         </ThemeProvider>
+        <script
+          src="https://aitors-hub-dashboard.asanchezgu.workers.dev/tracker.js"
+          data-app="calculadora-de-intereses"
+          data-key="ak_7061298ddb6f417d87a6b52e038d9b7b"
+          async
+        />
       </body>
     </html>
   );
