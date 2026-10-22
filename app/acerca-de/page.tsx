@@ -109,7 +109,7 @@ export default function AcercaDePage() {
       <main className="container">
         <div className="pb-10 pt-8 sm:pb-14">
           <Link
-            href="/"
+            href="/depositos"
             className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
