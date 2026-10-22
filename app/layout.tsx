@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   creator: AUTHOR.name,
   publisher: AUTHOR.name,
   alternates: {
-    canonical: "/",
+    canonical: "/depositos",
   },
   openGraph: {
     type: "website",
